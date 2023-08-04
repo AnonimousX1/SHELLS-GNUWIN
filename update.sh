@@ -7,12 +7,14 @@ read password
 stty echo # comando para ativar saida
 #Verificar senha
 echo "$password" | sudo -Sk printf "" 2>/dev/null
+echo "Verificar senha..."
 
 if [ $? != 0 ]; then
     echo "Senha incorreta, script encerrado"
     exit
 fi
 
+echo "Senha Correta..."
 echo "$password" | sudo -S apt update > /dev/null 2>&1
 upgradable_packages=$(echo "$password" | sudo -S apt list --upgradable 2>/dev/null | grep -v "Listing...")
 
