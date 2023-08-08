@@ -1,4 +1,4 @@
-# Scripts uteis aplicáveis em servidores e máquinas pessoais 
+# Scripts uteis aplicáveis em servidores e máquinas pessoal
 
 ![Nivelamento.](Happy.png)
 
