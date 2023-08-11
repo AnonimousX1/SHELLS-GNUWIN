@@ -28,7 +28,7 @@ else
     read -p "Você deseja atualizar o sistema sim(S) ou não(N): " response
     if [ "$response" == "S" || "$response" == "s" ]; then
         echo "$password" | sudo -S apt upgrade
-        echo "$response" | sudo -S apt upgrade # Isto provalmente não está bem escrito, mas é funcional
+        #echo "$response" | sudo -S apt upgrade # Isto provalmente não está bem escrito, mas é funcional
         echo "Atualizando o sistema..."
     else
         echo "Atualização não desejada."
