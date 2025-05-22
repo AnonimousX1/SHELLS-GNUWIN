@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # --- VARIAVEIS ---
-USERNAME="novo_usuario"
+USERNAME="usuario_novo"
 SSH_PORT="22" # Mude se quiser uma porta diferente
 HTTP_PORT="80"
 HTTPS_PORT="443"
