@@ -3,8 +3,19 @@
 # --- VARIAVEIS ---
 USERNAME="usuario_novo"
 SSH_PORT="22" # Mude se quiser uma porta diferente
-HTTP_PORT="80"
-HTTPS_PORT="443"
+
+# Defina as regras de porta/protocolo aqui.
+# Formato: "porta/protocolo". Exemplos: "80/tcp", "443/tcp", "5000/tcp", "53/udp"
+# Se uma porta precisa de TCP e UDP, adicione duas entradas: "53/tcp", "53/udp"
+PORT_RULES=(
+    "80/tcp"
+    "443/tcp"
+    "5000/tcp"
+    # Adicione mais regras conforme necessário, por exemplo:
+    # "53/udp"
+    # "53/tcp"
+    # "8080/tcp"
+)
 
 echo "Iniciando configuração de segurança básica do container..."
 
@@ -24,12 +35,21 @@ ufw default deny incoming
 ufw default allow outgoing
 
 # Permitir SSH (na porta configurada)
-ufw allow $SSH_PORT/tcp
+echo "Permitindo porta SSH $SSH_PORT/tcp..."
+ufw allow "$SSH_PORT/tcp"
 
-# Permitir tráfego web (se for um servidor web)
-ufw allow $HTTP_PORT/tcp
-ufw allow $HTTPS_PORT/tcp
+# Aplicar regras de portas personalizadas
+if [ ${#PORT_RULES[@]} -gt 0 ]; then
+    echo "Aplicando regras de portas personalizadas..."
+    for rule in "${PORT_RULES[@]}"; do
+        echo "Permitindo regra: $rule"
+        ufw allow "$rule"
+    done
+else
+    echo "Nenhuma regra de porta personalizada definida."
+fi
 
+#Mostrar status de configuração de ufw
 ufw status verbose
 
 # 4. Configurar Fail2ban
@@ -65,12 +85,12 @@ systemctl restart sshd
 
 # 6. Criar novo usuário e forçar troca de senha no primeiro login
 echo "Criando usuário '$USERNAME' e forçando troca de senha no primeiro login..."
-useradd -m -s /bin/bash $USERNAME
+useradd -m -s /bin/bash "$USERNAME"
 echo "$USERNAME:senha_temp_inicial" | chpasswd # Define uma senha temporária
-chage -d 0 $USERNAME                         # Força a troca de senha no próximo login
+chage -d 0 "$USERNAME"                         # Força a troca de senha no próximo login
 
 echo "Adicione o usuário '$USERNAME' ao grupo sudo para privilégios administrativos."
-usermod -aG sudo $USERNAME
+usermod -aG sudo "$USERNAME"
 
 echo "Configurações básicas de segurança finalizadas. Lembre-se de:"
 echo " - Adicionar suas chaves SSH para '$USERNAME'."
