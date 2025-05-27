@@ -23,15 +23,21 @@ ALLOW_OUT_NTP="yes"           # Permitir NTP (porta 123 udp) - para sincronia de
 ALLOW_OUT_HTTP_HTTPS="yes"    # Permitir HTTP/HTTPS (porta 80/443 tcp) - para apt, APIs, etc.
 
 # Adicione aqui outras regras de SAÍDA específicas que o container PRECISA acessar.
-# Formatos aceitos:
-# "IP_DESTINO/PROTOCOLO" (ex: "198.51.100.5/tcp")
-# "IP_DESTINO:PORTA/PROTOCOLO" (ex: "203.0.113.10:8080/udp")
-# "IP_DESTINO" (ex: "8.8.8.8")
+# Formatos aceitos (IP_OU_FAIXA_CIDR pode ser um IP como "8.8.8.8" ou uma faixa como "192.168.1.0/24"):
+# "IP_OU_FAIXA_CIDR"
+# "IP_OU_FAIXA_CIDR/PROTOCOLO"
+# "IP_OU_FAIXA_CIDR:PORTA"
+# "IP_OU_FAIXA_CIDR:PORTA/PROTOCOLO"
+#    "198.51.100.5/tcp"          # Ex: permitir tcp para um IP específico
+#    "203.0.113.10:53/udp"       # Ex: permitir udp para um IP e porta específicos
+#    "8.8.8.8"                   # Ex: permitir todo tráfego para este IP
+#    "172.16.0.0/12"             # Ex: permitir todo tráfego para a faixa 172.16.0.0/12
+#    "10.0.0.0/8/tcp"            # Ex: permitir TCP para a faixa 10.0.0.0/8
+#    "192.168.0.0/16:8080/tcp"   # Ex: permitir TCP na porta 8080 para a faixa 192.168.0.0/16
+#    ""                          # Ex: regra vazia, será ignorada
+
 ALLOW_OUT_SPECIFIC_IPS_PORTS=(
-    "198.51.100.5/tcp"      # Exemplo: permitir tcp para um IP específico
-    "203.0.113.10:53/udp"   # Exemplo: permitir udp para um IP e porta específicos
-    "8.8.8.8"               # Exemplo: permitir todo tráfego para este IP
-    ""                        # Exemplo de regra vazia, será ignorada
+
 )
 
 
@@ -109,40 +115,47 @@ fi
 if [ ${#ALLOW_OUT_SPECIFIC_IPS_PORTS[@]} -gt 0 ]; then
     echo "Aplicando regras de SAÍDA personalizadas para IPs/Portas específicos..."
     for rule_out_specific in "${ALLOW_OUT_SPECIFIC_IPS_PORTS[@]}"; do
-        if [ -z "$rule_out_specific" ]; then # Pula regras vazias
+        if [ -z "$rule_out_specific" ]; then
             echo "Aviso: Regra de SAÍDA específica vazia encontrada, pulando."
             continue
         fi
 
         echo "Processando regra SAÍDA original: $rule_out_specific"
         
-        target_ip=""
+        target_ip_or_cidr=""
         target_port=""
         target_proto=""
+        base_part_for_ip_port=""
 
-        # Tenta extrair PROTOCOLO (parte depois do último /)
-        if [[ "$rule_out_specific" == *"/"* ]]; then
-            target_proto=$(echo "$rule_out_specific" | sed 's#.*/##')
-            base_part=$(echo "$rule_out_specific" | sed 's#/[^/]*$##') # Parte antes do último /
+        # Tenta extrair PROTOCOLO (parte alfabética depois do último /)
+        if [[ "$rule_out_specific" =~ /([a-zA-Z]+)$ ]]; then # Termina com /letras
+            target_proto="${BASH_REMATCH[1]}"
+            # A parte antes deste protocolo encontrado (usando expansão de parâmetro do Bash)
+            base_part_for_ip_port="${rule_out_specific%/${target_proto}}"
         else
-            base_part="$rule_out_specific" # Sem / , então tudo é base_part
+            # Sem /letras no final, então não há protocolo especificado desta forma.
+            # A string inteira é a base para IP/CIDR e Porta.
+            target_proto=""
+            base_part_for_ip_port="$rule_out_specific"
         fi
 
-        # Da base_part, tenta extrair IP e PORTA (se IP:PORTA)
-        if [[ "$base_part" == *":"* ]]; then
-            target_ip=$(echo "$base_part" | cut -d':' -f1)
-            target_port=$(echo "$base_part" | cut -d':' -f2-) # -f2- para pegar o resto se houver mais ':' na porta (ipv6)
+        # Da base_part_for_ip_port, tenta extrair IP_OU_FAIXA_CIDR e PORTA (se IP:PORTA)
+        if [[ "$base_part_for_ip_port" == *":"* ]]; then
+            # Formato IP_OU_FAIXA_CIDR:PORTA
+            target_ip_or_cidr=$(echo "$base_part_for_ip_port" | cut -d':' -f1)
+            target_port=$(echo "$base_part_for_ip_port" | cut -d':' -f2-)
         else
-            target_ip="$base_part" # Sem : na base_part, então é só IP
+            # Formato IP_OU_FAIXA_CIDR apenas
+            target_ip_or_cidr="$base_part_for_ip_port"
+            target_port=""
         fi
         
-        # Validações básicas (opcional, mas bom ter)
-        if [ -z "$target_ip" ]; then
-            echo "Aviso: Não foi possível extrair IP da regra '$rule_out_specific', pulando."
+        if [ -z "$target_ip_or_cidr" ]; then
+            echo "Aviso: Não foi possível extrair IP/Faixa da regra '$rule_out_specific', pulando."
             continue
         fi
 
-        full_rule_out_cmd="to $target_ip"
+        full_rule_out_cmd="to $target_ip_or_cidr"
 
         if [ -n "$target_port" ]; then
             full_rule_out_cmd="$full_rule_out_cmd port $target_port"
