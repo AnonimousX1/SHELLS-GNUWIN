@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#AVISO: Antes de executar na máquina user limpe espaços com "dos2unix SecurityBasicConteinerLXC.sh"
+
 # --- VARIAVEIS ---
 USERNAME="usuario_novo"
 SSH_PORT="22" # Mude se quiser uma porta diferente
