@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#AVISO: Antes de executar na máquina user limpe espaços com "dos2unix SecurityBasicConteinerLXC.sh"
+#AVISO: Antes de executar na máquina user limpe espaços com "dos2unix SecurityBasicConteinerWebLXC.sh"
 
 # --- VARIAVEIS ---
 USERNAME="usuario_novo"
