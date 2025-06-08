@@ -6,6 +6,8 @@
 USERNAME="usuario_novo"
 SSH_PORT="22" # Mude se quiser uma porta diferente
 
+SERVER_NTP = "" # Atribua seu servidor NTP se tiver
+
 # Defina as regras de porta/protocolo para tráfego ENTRANDO no container.
 # Formato: "porta/protocolo". Exemplos: "80/tcp", "443/tcp", "5000/tcp", "53/udp"
 # CERTIFIQUE-SE DE QUE A INDENTAÇÃO AQUI E EM TODO O SCRIPT USE ESPAÇOS NORMAIS (ASCII 32)
@@ -50,8 +52,17 @@ echo "Atualizando pacotes do sistema..."
 apt update && apt upgrade -y
 apt autoremove -y
 
-# 1. Definindo servidor NTP
-# Pensando me como definir isto...
+
+# 0. Atualizar o sistema
+echo "Atualizando pacotes do sistema..."
+apt update && apt upgrade -y
+apt autoremove -y
+
+# 1.Definindo servidor NTP
+#echo "Definindo servidor NTP..."
+#if [ -z "$SERVER_NTP" ]; then
+	#sed -i "NTP=" /etc/systemd/timesyncd.conf
+#fi
 
 # 2. Instalar ferramentas de segurança (UFW, Fail2ban)
 echo "Instalando UFW e Fail2ban..."
