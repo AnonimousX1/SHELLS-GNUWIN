@@ -45,10 +45,13 @@ ALLOW_OUT_SPECIFIC_IPS_PORTS=(
 
 echo "Iniciando configuração de segurança básica do container..."
 
-# 1. Atualizar o sistema
+# 0. Atualizar o sistema
 echo "Atualizando pacotes do sistema..."
 apt update && apt upgrade -y
 apt autoremove -y
+
+# 1. Definindo servidor NTP
+# Pensando me como definir isto...
 
 # 2. Instalar ferramentas de segurança (UFW, Fail2ban)
 echo "Instalando UFW e Fail2ban..."
