@@ -6,7 +6,12 @@
 USERNAME="usuario_novo"
 SSH_PORT="22" # Mude se quiser uma porta diferente
 
-SERVER_NTP = "" # Atribua seu servidor NTP se tiver
+# Atribua seu servidor NTP se tiver
+#Formato: 185.255.13.2 ou URL"
+SERVER_NTP = "" 
+# ajuste seu timezone
+#Formato: "America/Sao_Paulo"
+TIME_ZONE = "" 
 
 # Defina as regras de porta/protocolo para tráfego ENTRANDO no container.
 # Formato: "porta/protocolo". Exemplos: "80/tcp", "443/tcp", "5000/tcp", "53/udp"
@@ -53,16 +58,12 @@ apt update && apt upgrade -y
 apt autoremove -y
 
 
-# 0. Atualizar o sistema
-echo "Atualizando pacotes do sistema..."
-apt update && apt upgrade -y
-apt autoremove -y
-
 # 1.Definindo servidor NTP
 #echo "Definindo servidor NTP..."
 #if [ -z "$SERVER_NTP" ]; then
 	#sed -i "NTP=" /etc/systemd/timesyncd.conf
 #fi
+#timedatectl set-timezone "$TIME_ZONE"
 
 # 2. Instalar ferramentas de segurança (UFW, Fail2ban)
 echo "Instalando UFW e Fail2ban..."
