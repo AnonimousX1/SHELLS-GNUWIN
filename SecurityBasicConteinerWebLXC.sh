@@ -1,6 +1,8 @@
 #!/bin/bash
 
-#AVISO: Antes de executar na máquina user limpe espaços com "dos2unix SecurityBasicConteinerWebLXC.sh"
+#AVISO 1: Antes de executar na máquina user limpe espaços com "dos2unix SecurityBasicConteinerWebLXC.sh"
+#AVISO 2: Dê permissão para o arquivo com "chmod +x SecurityBasicConteinerLXCNetworks.sh"
+#AVISO 3: Execute o arquivo com "sudo ./SecurityBasicConteinerLXCNetworks.sh"
 
 # --- VARIAVEIS ---
 USERNAME="usuario_novo"
