@@ -33,6 +33,11 @@ ALLOW_OUT_DNS="yes"           # Permitir DNS (porta 53 tcp/udp)
 ALLOW_OUT_NTP="yes"           # Permitir NTP (porta 123 udp) - para sincronia de tempo
 ALLOW_OUT_HTTP_HTTPS="yes"    # Permitir HTTP/HTTPS (porta 80/443 tcp) - para apt, APIs, etc.
 
+# Regras de SAÍDA baseadas apenas em PORTAS
+    #"53/tcp"    # Ex: DNS alternativo
+    #"53/udp"
+    # "8080/tcp"
+
 # Adicione aqui outras regras de SAÍDA específicas que o container PRECISA acessar.
 # Formatos aceitos (IP_OU_FAIXA_CIDR pode ser um IP como "8.8.8.8" ou uma faixa como "192.168.1.0/24"):
 # "IP_OU_FAIXA_CIDR"
@@ -46,6 +51,10 @@ ALLOW_OUT_HTTP_HTTPS="yes"    # Permitir HTTP/HTTPS (porta 80/443 tcp) - para ap
 #    "10.0.0.0/8/tcp"            # Ex: permitir TCP para a faixa 10.0.0.0/8
 #    "192.168.0.0/16:8080/tcp"   # Ex: permitir TCP na porta 8080 para a faixa 192.168.0.0/16
 #    ""                          # Ex: regra vazia, será ignorada
+	
+ALLOW_OUT_SPECIFIC_PORTS=(
+
+)
 
 ALLOW_OUT_SPECIFIC_IPS_PORTS=(
 
