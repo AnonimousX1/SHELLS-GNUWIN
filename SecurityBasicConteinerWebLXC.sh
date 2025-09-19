@@ -138,6 +138,32 @@ if [ "$ALLOW_OUT_HTTP_HTTPS" = "yes" ]; then
     ufw allow out to any port 443 proto tcp
 fi
 
+# Aplicar regras de SAÍDA personalizadas para Portas/Protocolos específicos
+if [ ${#ALLOW_OUT_SPECIFIC_PORTS[@]} -gt 0 ]; then
+    echo "Aplicando regras de SAÍDA para portas específicas..."
+
+    # Itera sobre cada regra definida no array
+    for rule_port in "${ALLOW_OUT_SPECIFIC_PORTS[@]}"; do
+        # Pula a iteração se a entrada for uma string vazia
+        if [ -z "$rule_port" ]; then
+            continue
+        fi
+
+        # Valida se a regra está no formato 'porta/protocolo' (ex: 80/tcp ou 53/udp)
+        # Usando uma expressão regular para checar o padrão
+        if [[ "$rule_port" =~ ^([1-9][0-9]*)/(tcp|udp)$ ]]; then
+            # Se a regra for válida, aplica-a
+            echo "  -> Permitindo regra válida: $rule_port"
+            ufw allow out "$rule_port"
+        else
+            # Se a regra for inválida, avisa o usuário e não a aplica
+            echo "  -> AVISO: A regra '$rule_port' não está no formato 'porta/protocolo' válido. Pulando."
+        fi
+    done
+else
+    # Informa ao usuário que nenhuma regra foi definida e, portanto, nenhuma ação foi tomada
+    echo "Nenhuma regra de SAÍDA para portas específicas foi definida. Pulando esta etapa."
+fi
 
 # Aplicar regras de SAÍDA personalizadas para IPs/Portas específicos
 if [ ${#ALLOW_OUT_SPECIFIC_IPS_PORTS[@]} -gt 0 ]; then
