@@ -252,7 +252,12 @@ systemctl start fail2ban
 
 echo ""
 echo "Fail2ban configurado e iniciado."
-sleep 1
+echo "Verificando status do Fail2ban..."
+if systemctl is-active --quiet fail2ban; then
+    echo "Fail2ban está ativo."
+else
+    echo "AVISO: Fail2ban pode não ter iniciado corretamente."
+fi
 
 # 5. Segurança do SSH
 echo "Configurando segurança do SSH..."
