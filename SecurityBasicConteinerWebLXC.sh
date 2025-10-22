@@ -11,10 +11,10 @@ SSH_PORT="22" # Mude se quiser uma porta diferente
 
 # Atribua seu servidor NTP se tiver
 #Formato: 185.255.13.2 ou URL"
-SERVER_NTP = "" 
+SERVER_NTP="" 
 # ajuste seu timezone
 #Formato: "America/Sao_Paulo"
-TIME_ZONE = "" 
+TIME_ZONE="" 
 
 # Defina as regras de porta/protocolo para tráfego ENTRANDO no container.
 # Formato: "porta/protocolo". Exemplos: "80/tcp", "443/tcp", "5000/tcp", "53/udp"
@@ -274,7 +274,7 @@ systemctl restart sshd
 # 6. Criar novo usuário e forçar troca de senha no primeiro login
 echo "Criando usuário '$USERNAME' e forçando troca de senha no primeiro login..."
 useradd -m -s /bin/bash "$USERNAME"
-echo "$USERNAME:$senha_temp_inicial" | chpasswd
+echo "$USERNAME:$SENHA_TEMP_INICIAL" | chpasswd
 chage -d 0 "$USERNAME"
 echo "Adicionando usuário '$USERNAME' ao grupo sudo para privilégios administrativos..."
 usermod -aG sudo "$USERNAME"
