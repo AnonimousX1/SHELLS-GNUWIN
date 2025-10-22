@@ -6,6 +6,7 @@
 
 # --- VARIAVEIS ---
 USERNAME="usuario_novo"
+SENHA_TEMP_INICIAL="Defina uma senha aqui"
 SSH_PORT="22" # Mude se quiser uma porta diferente
 
 # Atribua seu servidor NTP se tiver
@@ -273,7 +274,7 @@ systemctl restart sshd
 # 6. Criar novo usuário e forçar troca de senha no primeiro login
 echo "Criando usuário '$USERNAME' e forçando troca de senha no primeiro login..."
 useradd -m -s /bin/bash "$USERNAME"
-echo "$USERNAME:senha_temp_inicial" | chpasswd
+echo "$USERNAME:$senha_temp_inicial" | chpasswd
 chage -d 0 "$USERNAME"
 echo "Adicionando usuário '$USERNAME' ao grupo sudo para privilégios administrativos..."
 usermod -aG sudo "$USERNAME"
