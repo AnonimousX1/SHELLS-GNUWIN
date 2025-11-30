@@ -1,5 +1,3 @@
 @echo off
-wsl --cd "~" ./iniciar_kex.sh
-::wsl -d kali-linux --exec bash -i -c  "./iniciar_kex.sh"
-::wsl kex --win -s
+wsl --cd "~" sh <caminho_no_kali>/iniciar_kex.sh
 pause
