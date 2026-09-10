@@ -67,11 +67,6 @@ PORT_RULES_OUT=(
 
 # Regras de SAÍDA baseadas apenas em IP's
 ALLOW_OUT_ADVANCED_RULES=(
-    "10.0.1.1"
-    "10.0.1.0"
-    "10.0.1.255"
-    "10.0.8.0/26"
-    "192.168.10.0/24"
 )
 
 echo -e "\nIniciando configuração de segurança básica do container LXC...\n"
