@@ -3,7 +3,7 @@ set -euo pipefail # Aborta o script em caso de erro, variável não declarada ou
 
 #AVISO 0: ESTE SCRIPT FOI TESTADO SOMENTE EM DISTRIBUIÇÕES UBUNTU E DEBIAN.
 #AVISO 1: O Script anterior foi feito por mim, porém este foi feito com auxilio de IA (Gemini)
-#AVISO 2: Antes de executar na máquina user limpe espaços com "dos2unix SecurityBasicConteinerWebLXC.sh"
+#AVISO 2: Antes de executar na máquina limpe espaços em brancos com o comando "dos2unix SecurityBasicConteinerWebLXC.sh"
 #AVISO 3: Dê permissão para o arquivo com "chmod +x SecurityBasicConteinerLXCNetworks.sh"
 #AVISO 4: Execute o arquivo com "sudo ./SecurityBasicConteinerLXCNetworks.sh"
 
